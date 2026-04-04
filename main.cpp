@@ -14,7 +14,7 @@ void add(Node*& head, int info);
 void print(Node* head, int depth);
 Node* search(Node* head, int query);
 void del(Node*& head, int info);
-
+Node* nextLargest(Node* head);
 
 int main(){
   fstream f("nums.txt");
@@ -136,6 +136,56 @@ void del(Node*& head, int info){
     return;
     
   }
+
+
+
+  //deletes 2 leafs
+  if(current->left != NULL && current->right != NULL){
+    Node* next = nextLargest(current->right);
+    if (current->parent ==NULL){
+      head = next;
+      next->parent->left = NULL;
+      next->parent = NULL;
+      current->right->parent = next;
+      current->t->parent = next;
+      next->left = current->left;
+      next->right=current->right;
+      delete current;
+      return;
+    }
+    
+    next->parent->left = NULL;
+    next->parent = current->parent;
+    current->right->parent = next;
+    current->left->parent = next;
+    next->left = current->left;
+    next->right=current->right;
+    delete current;
+    return;
+
+    /*
+    if(current->parent->left == current){
+      current->parent->left = current->right;
+    }else{
+      current->parent->right = current->right;
+    }
+    current->right->parent=current->parent;
+    delete current;
+    return;
+    */
+    
+  }
+
+  
+}
+
+
+//when calling the first time make sure you call wtvr thing you want's right child
+Node* nextLargest(Node* head){
+  if (head->left == NULL){
+    return head;
+  }
+  return nextLargest(head->left);
 }
   
 
