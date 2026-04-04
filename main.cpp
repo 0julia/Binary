@@ -12,7 +12,9 @@ struct Node{
 
 void add(Node*& head, int info);
 void print(Node* head, int depth);
-void search(Node* head, int query);
+Node* search(Node* head, int query);
+void del(Node*& head, int info);
+
 
 int main(){
   fstream f("nums.txt");
@@ -43,9 +45,15 @@ int main(){
       cout << "What number would you like to search for? ";
       int query;
       cin >> query;
-      search(head, query);
+      Node* temp = search(head, query);
+      if(temp != NULL){
+	cout << query << " is in the tree";
+      }
     }else if(input == "delete"){
-      cout << "cool"<<endl;
+      cout << "What number would you like to delete? ";
+      int query;
+      cin >> query;
+      del(head,query);
     }else if(input == "print"){
       print(head, 0);
     }else if(input == "quit"){
@@ -65,20 +73,89 @@ int main(){
   return 0;
 }
 
-void search(Node* head, int query){
+
+void del(Node*& head, int info){
   if(!head){
-    cout << "Sorry, that number is not in the tree";
+    cout << "tree empty";
     return;
   }
+  Node* current = search(head, info);
+  if(current == NULL){
+    return;
+  }
+  
+  //deletes things with no leafs
+  if(current->left == NULL && current->right == NULL){
+    if (current->parent != NULL){
+      if(current->parent->left == current){
+	current->parent->left = NULL;
+      }else if (current->parent->right == current){
+	current->parent->right = NULL;
+      }
+    }else{
+      head = NULL;
+    }
+    delete current;
+    return;
+  }
+
+
+  //deletes things with one leaf
+  if(current->left == NULL && current->right != NULL){
+    if (current->parent ==NULL){
+      head = current->right;
+      current->right->parent = NULL;
+      delete current;
+      return;
+    }
+
+    if(current->parent->left == current){
+      current->parent->left = current->right;
+    }else{
+      current->parent->right = current->right;
+    }
+    current->right->parent=current->parent;
+    delete current;
+    return;
+  }
+
+  if(current->left != NULL && current->right == NULL){
+    if (current->parent ==NULL){
+      head = current->left;
+      current->left->parent = NULL;
+      delete current;
+      return;
+    }
+      if(current->parent->right == current){
+      current->parent->right = current->left;
+    }else{
+      current->parent->left = current->left;
+    }
+    current->left->parent=current->parent;
+    delete current;
+    return;
+    
+  }
+}
+  
+
+
+
+Node* search(Node* head, int query){
+  if(!head){
+    cout << "Sorry, that number is not in the tree";
+    return NULL;
+  }
   if(head->data == query){
-    cout << query << " is in the tree";
+    return head;
   }else if(head->data > query){
-    search(head->left, query);
+    return search(head->left, query);
   }else if(head->data < query){
-    search(head->right, query);
+    return search(head->right, query);
   }else{
     cout <<"Problem!" << endl;
   }
+  return NULL;
 }
 
 
