@@ -10,7 +10,7 @@ struct Node{
   Node* parent=NULL;
 };
 
-void add(Node* head, int info);
+void add(Node*& head, int info);
 void print(Node* head, int depth);
 
 int main(){
@@ -63,17 +63,30 @@ int main(){
 
 
 
-void add(Node* current, int info){
-  if (current == NULL){
-    Node* current = new Node();
-    //current->parent = NULL;//shouldn't need cuz already defined?
-    current->data = info;
+void add(Node*& head, int info){
+  if (head == NULL){
+    Node* new_current = new Node();
+    head = new_current;
+    head->data = info;
     return;
   }
-  if(current->data > info){
-    add(current->left, info);
-  }else if(current->data < info){
-    add(current->right, info);
+  //cout << "3";
+  if(head->data > info && head->left==NULL){
+    Node* new_current = new Node();
+    head->left=new_current;
+    new_current->data=info;
+    new_current->parent = head;
+    return;
+  }else if(head->data < info && head->right==NULL){
+    Node* new_current = new Node();
+    head->right=new_current;
+    new_current->data=info;
+    new_current->parent = head;
+    return;
+  }else if(head->data > info){
+    add(head->left, info);
+  }else if(head->data < info){
+    add(head->right, info);
   }else{
     cout<< "problem";
   }
@@ -81,5 +94,14 @@ void add(Node* current, int info){
 
 
 void print(Node* current, int depth){
-  cout<< "printed";
+  //cout<< "printed";
+  if(current == NULL){
+    return;
+  }
+  print(current->right, depth+1);
+  for (int i = 0; i< depth; i++){
+    cout << "   ";
+  }
+  cout << current->data << endl;
+  print(current->left, depth+1);
 }
