@@ -12,6 +12,7 @@ struct Node{
 
 void add(Node*& head, int info);
 void print(Node* head, int depth);
+void search(Node* head, int query);
 
 int main(){
   fstream f("nums.txt");
@@ -39,7 +40,10 @@ int main(){
       }
       
     }else if(input == "search"){
-      cout << "sorry, the number isn't here :(" << endl;
+      cout << "What number would you like to search for? ";
+      int query;
+      cin >> query;
+      search(head, query);
     }else if(input == "delete"){
       cout << "cool"<<endl;
     }else if(input == "print"){
@@ -61,6 +65,21 @@ int main(){
   return 0;
 }
 
+void search(Node* head, int query){
+  if(!head){
+    cout << "Sorry, that number is not in the tree";
+    return;
+  }
+  if(head->data == query){
+    cout << query << " is in the tree";
+  }else if(head->data > query){
+    search(head->left, query);
+  }else if(head->data < query){
+    search(head->right, query);
+  }else{
+    cout <<"Problem!" << endl;
+  }
+}
 
 
 void add(Node*& head, int info){
@@ -70,7 +89,6 @@ void add(Node*& head, int info){
     head->data = info;
     return;
   }
-  //cout << "3";
   if(head->data > info && head->left==NULL){
     Node* new_current = new Node();
     head->left=new_current;
@@ -94,7 +112,6 @@ void add(Node*& head, int info){
 
 
 void print(Node* current, int depth){
-  //cout<< "printed";
   if(current == NULL){
     return;
   }
