@@ -142,6 +142,37 @@ void del(Node*& head, int info){
   //deletes 2 leafs
   if(current->left != NULL && current->right != NULL){
     Node* next = nextLargest(current->right);
+    //if next has a right child, need to attach that child to its parent
+    if(next->right != NULL){
+      next->right->parent=next->parent;
+    }
+    if(next->parent->right==next){
+      next->parent->right = next->right;
+    }else{
+      next->parent->left = next->right;
+    }
+    next->left=current->left;
+    next->right=current->right;
+
+    if(current->left){
+      current->left->parent = next;
+    }
+    if(current->right){
+      current->right->parent=next;
+    }
+    next->parent=current->parent;
+
+    if(current->parent==NULL){
+      head=next;
+    }else if(current->parent->right==current){
+      current->parent->right=next;
+    }else{
+      current->parent->left=next;
+    }
+    delete current;
+    return;
+    
+    /*
     if (current->parent ==NULL){
       head = next;
       next->parent->left = NULL;
