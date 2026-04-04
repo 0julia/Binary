@@ -10,10 +10,14 @@ struct Node{
   Node* parent=NULL;
 };
 
+void add(Node* head, int info);
+void print(Node* head, int depth);
+
 int main(){
   fstream f("nums.txt");
   int fnum;
   bool done = false;
+  Node* head = NULL;
   
   do{
     string input;
@@ -27,16 +31,19 @@ int main(){
       cin >> num;
       if (num == -1){
 	while (f >> fnum){
-	  cout << fnum << " ";
+	  add(head,fnum);
 	}
 	cout <<endl;
+      }else{
+	add(head,num);
       }
+      
     }else if(input == "search"){
       cout << "sorry, the number isn't here :(" << endl;
     }else if(input == "delete"){
       cout << "cool"<<endl;
     }else if(input == "print"){
-      cout << "You printed!" <<endl;
+      print(head, 0);
     }else if(input == "quit"){
       done=true;
     }else{
@@ -46,5 +53,33 @@ int main(){
   }while(done==false);
   
   f.close();
+
+  // Delete all the nodes
+  //  Node* current = head;
+  //while(
+  
   return 0;
+}
+
+
+
+void add(Node* current, int info){
+  if (current == NULL){
+    Node* current = new Node();
+    //current->parent = NULL;//shouldn't need cuz already defined?
+    current->data = info;
+    return;
+  }
+  if(current->data > info){
+    add(current->left, info);
+  }else if(current->data < info){
+    add(current->right, info);
+  }else{
+    cout<< "problem";
+  }
+}
+
+
+void print(Node* current, int depth){
+  cout<< "printed";
 }
