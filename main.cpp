@@ -15,6 +15,7 @@ void print(Node* head, int depth);
 Node* search(Node* head, int query);
 void del(Node*& head, int info);
 Node* nextLargest(Node* head);
+void allDone(Node* head);
 
 int main(){
   fstream f("nums.txt");
@@ -70,12 +71,19 @@ int main(){
   f.close();
 
   // Delete all the nodes
-  //  Node* current = head;
-  //while(
+  allDone(head);
   
   return 0;
 }
 
+//deletes the stuff:
+void allDone(Node* head){
+  if (head==NULL){
+    return;}
+  allDone(head->left);
+  allDone(head->right);
+  delete head;
+}
 
 void del(Node*& head, int info){
   if(!head){
@@ -146,25 +154,24 @@ void del(Node*& head, int info){
   if(current->left != NULL && current->right != NULL){
     Node* next = nextLargest(current->right);
     //if next has a right child, need to attach that child to its parent
-    if(next->right != NULL){
-      next->right->parent=next->parent;
-    }
-    if(next->parent->right==next){
+    if(next != current->right){//if next biggest isn't hte imediet next one
+      if(next->right != NULL){
+	next->right->parent=next->parent;
+      }
+      if(next->parent->right==next){
       next->parent->right = next->right;
-    }else{
-      next->parent->left = next->right;
+      }else{
+	next->parent->left = next->right;
     }
-    next->left=current->left;
-    next->right=current->right;
-
-    if(current->left){
-      current->left->parent = next;
+      next->left=current->left;
+      next->right=current->right;
     }
-    if(current->right){
-      current->right->parent=next;
-    }
+    
+    current->left->parent = next;
+    current->right->parent=next;
     next->parent=current->parent;
 
+    //if the one being replaced is the first thinger
     if(current->parent==NULL){
       head=next;
     }else if(current->parent->right==current){
@@ -215,6 +222,7 @@ void add(Node*& head, int info){
     Node* new_current = new Node();
     head = new_current;
     head->data = info;
+    head->parent=NULL;
     return;
   }
   //if input is less than head and at end, add 
