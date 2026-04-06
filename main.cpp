@@ -22,7 +22,7 @@ int main(){
   bool done = false;
   Node* head = NULL;
   
-  do{
+  do{ // keep going till quit
     string input;
     cout << "What would you like to do?(add, search, delete, print, quit) ";
     cin >> input;
@@ -40,7 +40,7 @@ int main(){
       }else{
 	add(head,num);
       }
-      
+      //search
     }else if(input == "search"){
       cout << "What number would you like to search for? ";
       int query;
@@ -49,21 +49,24 @@ int main(){
       if(temp != NULL){
 	cout << query << " is in the tree";
       }
+      //delete
     }else if(input == "delete"){
       cout << "What number would you like to delete? ";
       int query;
       cin >> query;
       del(head,query);
+      //print
     }else if(input == "print"){
       print(head, 0);
     }else if(input == "quit"){
+      //leave
       done=true;
     }else{
       cout<<"Sorry, that was an invalid command" << endl;
     }
     cout << endl;
   }while(done==false);
-  
+  //close file
   f.close();
 
   // Delete all the nodes
@@ -171,43 +174,7 @@ void del(Node*& head, int info){
     }
     delete current;
     return;
-    
-    /*
-    if (current->parent ==NULL){
-      head = next;
-      next->parent->left = NULL;
-      next->parent = NULL;
-      current->right->parent = next;
-      current->t->parent = next;
-      next->left = current->left;
-      next->right=current->right;
-      delete current;
-      return;
-    }
-    
-    next->parent->left = NULL;
-    next->parent = current->parent;
-    current->right->parent = next;
-    current->left->parent = next;
-    next->left = current->left;
-    next->right=current->right;
-    delete current;
-    return;
-
-    /*
-    if(current->parent->left == current){
-      current->parent->left = current->right;
-    }else{
-      current->parent->right = current->right;
-    }
-    current->right->parent=current->parent;
-    delete current;
-    return;
-    */
-    
   }
-
-  
 }
 
 
@@ -223,17 +190,19 @@ Node* nextLargest(Node* head){
 
 
 Node* search(Node* head, int query){
-  if(!head){
+  if(!head){//at end of thread and its not there
     cout << "Sorry, that number is not in the tree";
     return NULL;
   }
+  //if found, return it
   if(head->data == query){
     return head;
   }else if(head->data > query){
+    //recursive
     return search(head->left, query);
   }else if(head->data < query){
     return search(head->right, query);
-  }else{
+  }else{ // debug
     cout <<"Problem!" << endl;
   }
   return NULL;
@@ -241,12 +210,14 @@ Node* search(Node* head, int query){
 
 
 void add(Node*& head, int info){
+  //add leafs
   if (head == NULL){
     Node* new_current = new Node();
     head = new_current;
     head->data = info;
     return;
   }
+  //if input is less than head and at end, add 
   if(head->data > info && head->left==NULL){
     Node* new_current = new Node();
     head->left=new_current;
@@ -254,25 +225,29 @@ void add(Node*& head, int info){
     new_current->parent = head;
     return;
   }else if(head->data < info && head->right==NULL){
+  //if input is more than head and at end, add 
     Node* new_current = new Node();
     head->right=new_current;
     new_current->data=info;
     new_current->parent = head;
     return;
   }else if(head->data > info){
+  //if input is less than head and not at end
     add(head->left, info);
   }else if(head->data < info){
     add(head->right, info);
   }else{
+  //if input is more than head and not at end
     cout<< "problem";
   }
 }
 
 
 void print(Node* current, int depth){
-  if(current == NULL){
+  if(current == NULL){ //if leaf, end that
     return;
   }
+  //print right then middle then left
   print(current->right, depth+1);
   for (int i = 0; i< depth; i++){
     cout << "   ";
