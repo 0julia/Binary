@@ -25,12 +25,12 @@ int main(){
   
   do{ // keep going till quit
     string input;
-    cout << "What would you like to do?(add, search, delete, print, quit) ";
+0    cout << "What would you like to do?(add, search, delete, print, quit) ";
     cin >> input;
 
     if(input == "add"){
       //ask input
-      cout << "input a number to add please (If you would like to insert a number input '-1') ";
+      cout << "input a number to add please (If you would like to input a file '-1') ";
       int num;
       cin >> num;
       if (num == -1){
@@ -159,13 +159,14 @@ void del(Node*& head, int info){
 	next->right->parent=next->parent;
       }
       if(next->parent->right==next){
-      next->parent->right = next->right;
+	next->parent->right = next->right;
       }else{
 	next->parent->left = next->right;
+      }
     }
       next->left=current->left;
       next->right=current->right;
-    }
+    
     
     current->left->parent = next;
     current->right->parent=next;
